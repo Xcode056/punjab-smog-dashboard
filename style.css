@@ -1,0 +1,664 @@
+@font-face {
+    font-family: 'Jameel Noori Nastaleeq';
+    src: url('./fonts/JameelNooriNastaleeq.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
+
+
+
+
+
+
+
+/* Punjab Smog & Fog Dashboard — clean responsive theme
+   Save this file as style.css next to index.html.
+   Optional Urdu font file: fonts/JameelNooriNastaleeq.ttf
+*/
+
+@font-face {
+    font-family: "Jameel Noori Nastaleeq";
+    src: url("./fonts/JameelNooriNastaleeq.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+:root {
+    --ink: #183344;
+    --muted: #607585;
+    --page: #f1f6f9;
+    --surface: #ffffff;
+    --border: #d6e2e9;
+    --teal: #087e8b;
+    --teal-dark: #075c68;
+    --teal-soft: #e4f4f5;
+    --green: #26734d;
+    --shadow: 0 8px 24px rgba(28, 58, 76, .08);
+    --radius: 16px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-width: 320px;
+    scroll-behavior: smooth;
+    background: var(--page);
+}
+
+body {
+    width: min(100% - 36px, 1080px);
+    margin: 0 auto;
+    padding: 28px 0 24px;
+    color: var(--ink);
+    background: transparent;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    text-align: left;
+}
+
+html[dir="rtl"] body {
+    font-family: "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", Tahoma, serif;
+    line-height: 2;
+    text-align: right;
+}
+
+h1,
+h2,
+h3,
+p {
+    overflow-wrap: anywhere;
+}
+
+h1,
+h2,
+h3 {
+    color: #15394b;
+}
+
+h1 {
+    margin: 0 0 18px;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.45;
+    font-weight: 850;
+    letter-spacing: -.025em;
+}
+
+html[dir="rtl"] h1 {
+    line-height: 1.9;
+    letter-spacing: 0;
+}
+
+h2 {
+    margin: 30px 0 14px;
+    padding: 0 0 10px;
+    border-bottom: 2px solid #d5e4ea;
+    font-size: clamp(1.3rem, 2.8vw, 1.7rem);
+    line-height: 1.55;
+    font-weight: 800;
+}
+
+html[dir="rtl"] h2 {
+    line-height: 1.9;
+}
+
+p {
+    margin: 12px 0;
+}
+
+/* Language toggle */
+#languageToggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    margin: 0 0 20px;
+    padding: 8px 17px;
+    border: 1px solid var(--teal);
+    border-radius: 11px;
+    background: #fff;
+    color: var(--teal-dark);
+    font: inherit;
+    font-weight: 750;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(28, 58, 76, .06);
+    transition: background .18s ease, color .18s ease, transform .18s ease;
+}
+
+#languageToggle:hover {
+    background: var(--teal);
+    color: #fff;
+}
+
+#languageToggle:active {
+    transform: translateY(1px);
+}
+
+/* City selector */
+#cityName {
+    margin: 0 0 6px;
+    font-size: 1.35rem;
+    font-weight: 800;
+}
+
+#cityLabel {
+    display: block;
+    margin: 8px 0 6px;
+    color: var(--muted);
+    font-weight: 750;
+}
+
+#citySelect {
+    display: block;
+    width: min(100%, 420px);
+    min-height: 48px;
+    margin: 0 0 18px;
+    padding: 9px 13px;
+    border: 1px solid #b8cbd5;
+    border-radius: 11px;
+    background: #fff;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(28, 58, 76, .05);
+}
+
+html[dir="rtl"] #citySelect {
+    direction: rtl;
+    text-align: right;
+    font-family: "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", Tahoma, serif;
+    line-height: 1.8;
+}
+
+/* Do not force direction/positioning on native dropdown options; browsers manage popup UI. */
+#citySelect option {
+    font-family: inherit;
+    background: #fff;
+    color: #183344;
+}
+
+#introText {
+    margin: 16px 0 24px;
+    padding: 15px 18px;
+    border: 1px solid #b9dfe1;
+    border-inline-start: 5px solid var(--teal);
+    border-radius: 12px;
+    background: var(--teal-soft);
+    color: #24535c;
+}
+
+/* Main sections */
+#currentAQIHeading,
+#healthAdviceHeading,
+#todayForecastHeading,
+#tomorrowForecastHeading,
+#analyticsHeading {
+    margin-top: 28px;
+    padding: 12px 15px;
+    border: 1px solid var(--border);
+    border-inline-start: 5px solid var(--teal);
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: 0 3px 12px rgba(28, 58, 76, .04);
+}
+
+#aqiLabel,
+#aqiCategoryLabel,
+#adviceLabel,
+#lowestPM25Label,
+#bestWindowLabel,
+#lowestPM25TomorrowLabel,
+#bestWindowTomorrowLabel,
+#pmLabel,
+#updatedTimeLabel {
+    color: var(--muted);
+    font-weight: 750;
+}
+
+#aqiValue {
+    display: inline-block;
+    margin: 0 5px;
+    color: var(--teal-dark);
+    font-size: clamp(2.7rem, 8vw, 4.6rem);
+    font-weight: 900;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+    vertical-align: middle;
+}
+
+#aqiFace {
+    display: inline-block;
+    margin-inline: 8px;
+    font-size: 1.8rem;
+    vertical-align: middle;
+}
+
+#aqiCategory {
+    display: inline-block;
+    max-width: 100%;
+    margin: 5px 0 10px;
+    padding: 5px 13px;
+    border: 1px solid #a9d8c0;
+    border-radius: 999px;
+    background: #eaf7ef;
+    color: #1f6945;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+/* Health advice is a visible but calm callout */
+#aqiAdvice {
+    display: inline-block;
+    max-width: 100%;
+    margin: 8px 0 18px;
+    padding: 14px 17px;
+    border: 1px solid #b9d9c5;
+    border-inline-start: 5px solid var(--green);
+    border-radius: 12px;
+    background: #f0f8f2;
+    color: #244d35;
+    line-height: 1.8;
+    vertical-align: middle;
+}
+
+html[dir="rtl"] #aqiAdvice {
+    line-height: 2.15;
+}
+
+#aqiAdviceIcon {
+    display: inline-block;
+    margin-inline: 5px;
+    font-size: 1.35rem;
+    vertical-align: middle;
+}
+
+/* Forecast summary values */
+#lowestPM25,
+#bestWindow,
+#lowestPM25Tomorrow,
+#bestWindowTomorrow,
+#pmValue,
+#updatedTime {
+    display: inline-block;
+    max-width: 100%;
+    margin: 4px 0;
+    padding: 5px 10px;
+    border: 1px solid #d1e1e8;
+    border-radius: 9px;
+    background: #f7fafc;
+    color: #214b60;
+    font-weight: 750;
+    overflow-wrap: anywhere;
+}
+
+#todayForecastExplanation {
+    margin: 12px 0 18px;
+    padding: 12px 15px;
+    border: 1px solid #d9e5eb;
+    border-radius: 11px;
+    background: #fff;
+    color: var(--muted);
+}
+
+/* Analytics panel and chart */
+.analytics-panel {
+    margin: 26px 0 24px;
+    padding: clamp(14px, 3vw, 22px);
+    border: 1px solid #d1e0e8;
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+}
+
+.analytics-panel #analyticsHeading {
+    margin: 0 0 8px;
+    padding: 0 0 10px;
+    border: 0;
+    border-bottom: 1px solid #e1eaf0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.section-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.section-heading>div {
+    min-width: 0;
+}
+
+.eyebrow {
+    margin: 0 0 4px;
+    color: var(--teal);
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    font-size: .72rem;
+    font-weight: 850;
+    letter-spacing: .12em;
+    line-height: 1.4;
+}
+
+.muted {
+    margin: 6px 0 12px;
+    color: var(--muted);
+    font-size: .92rem;
+}
+
+.chart-legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+    padding: 5px 10px;
+    border: 1px solid #d5e4ea;
+    border-radius: 999px;
+    background: #f7fafc;
+    color: #315367;
+    font-size: .85rem;
+    font-weight: 750;
+}
+
+.legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #087e8b;
+    box-shadow: 0 0 0 3px #d8f0f1;
+}
+
+.chart-container {
+    width: 100%;
+    min-width: 0;
+    height: clamp(240px, 38vw, 340px);
+    margin: 12px 0 8px;
+    padding: 10px;
+    overflow: hidden;
+    border: 1px solid #e0eaf0;
+    border-radius: 13px;
+    background: linear-gradient(180deg, #fcfeff 0%, #f5f9fb 100%);
+}
+
+#aqiChart {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.chart-note {
+    margin: 10px 2px 0;
+    color: var(--muted);
+    font-size: .88rem;
+}
+
+/* Forecasts: compact responsive cards */
+#hourlyForecast,
+#tomorrowForecast {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 145px), 1fr));
+    gap: 12px;
+    align-items: stretch;
+    width: 100%;
+    margin: 16px 0 26px;
+}
+
+.hour-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 86px;
+    padding: 12px !important;
+    border: 1px solid rgba(24, 51, 68, .16) !important;
+    border-radius: 12px !important;
+    color: #183344 !important;
+    box-shadow: 0 3px 10px rgba(28, 58, 76, .06);
+    text-align: center;
+    overflow-wrap: anywhere;
+    line-height: 1.55;
+    transition: transform .16s ease, box-shadow .16s ease;
+}
+
+html[dir="rtl"] .hour-item {
+    line-height: 1.9;
+}
+
+.hour-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 16px rgba(28, 58, 76, .11);
+}
+
+.hour-item span {
+    display: block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+/* The JS adds a 3px black border to the best three-hour window.
+   Replace its harsh look with a clear teal outline and a small label-like effect. */
+.hour-item[style*="border: 3px solid"] {
+    border: 2px solid #075c68 !important;
+    outline: 2px solid #75c7c9;
+    outline-offset: 1px;
+    box-shadow: 0 0 0 3px #e4f4f5, 0 6px 14px rgba(8, 126, 139, .16);
+    position: relative;
+}
+
+/* AQI backgrounds are assigned by JavaScript; soften their appearance without hiding status. */
+/* .hour-item[style*="background-color: rgb(0, 228, 0)"] {
+    background-color: #e2f5e8 !important;
+}
+
+.hour-item[style*="background-color: rgb(255, 255, 0)"] {
+    background-color: #fff6cf !important;
+}
+
+.hour-item[style*="background-color: rgb(255, 126, 0)"] {
+    background-color: #ffead6 !important;
+}
+
+.hour-item[style*="background-color: rgb(255, 0, 0)"] {
+    background-color: #fde5e5 !important;
+}
+
+.hour-item[style*="background-color: rgb(143, 63, 151)"] {
+    background-color: #f0e4f4 !important;
+}
+
+.hour-item[style*="background-color: rgb(126, 0, 35)"] {
+    background-color: #f4dfe6 !important;
+}
+
+.hour-item[style*="background-color: rgb(221, 221, 221)"] {
+    background-color: #edf1f4 !important;
+} */
+
+#tomorrowForecast>p,
+#hourlyForecast>p {
+    margin: 0;
+    padding: 14px;
+    border: 1px dashed #cbdbe4;
+    border-radius: 10px;
+    background: #fff;
+    color: var(--muted);
+}
+
+/* Action buttons */
+#shareCardButton,
+#whatsappButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    margin: 8px 8px 8px 0;
+    padding: 11px 17px;
+    border: 1px solid var(--teal);
+    border-radius: 11px;
+    background: var(--teal);
+    color: #fff;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(8, 126, 139, .15);
+    transition: background .18s ease, transform .18s ease;
+}
+
+#shareCardButton:hover {
+    background: var(--teal-dark);
+    transform: translateY(-1px);
+}
+
+#whatsappButton {
+    border-color: #198754;
+    background: #198754;
+    box-shadow: 0 4px 12px rgba(25, 135, 84, .15);
+}
+
+#whatsappButton:hover {
+    background: #146c43;
+    transform: translateY(-1px);
+}
+
+button:disabled {
+    opacity: .65;
+    cursor: wait;
+}
+
+/* Footer */
+#siteFooter {
+    margin-top: 34px;
+    padding: 18px 0 4px;
+    border-top: 1px solid #d0dfe6;
+    color: var(--muted);
+    font-size: .9rem;
+}
+
+#siteFooter p {
+    margin: 8px 0;
+}
+
+#siteFooter a {
+    color: #086b8d;
+    font-weight: 750;
+    text-underline-offset: 3px;
+}
+
+#siteFooter a:hover {
+    color: #06485e;
+}
+
+a:focus-visible,
+button:focus-visible,
+#citySelect:focus-visible {
+    outline: 3px solid rgba(8, 126, 139, .38);
+    outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+    body {
+        width: calc(100% - 26px);
+        padding-top: 18px;
+    }
+
+    #hourlyForecast,
+    #tomorrowForecast {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .hour-item {
+        min-height: 78px;
+        padding: 10px 8px !important;
+        font-size: .9rem;
+    }
+
+    .chart-container {
+        height: 270px;
+        padding: 6px;
+    }
+
+    .analytics-panel {
+        padding: 15px;
+    }
+
+    .section-heading {
+        gap: 8px;
+    }
+}
+
+@media (max-width: 420px) {
+    body {
+        width: calc(100% - 20px);
+        padding-top: 12px;
+        font-size: 15px;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.22rem;
+    }
+
+    #currentAQIHeading,
+    #healthAdviceHeading,
+    #todayForecastHeading,
+    #tomorrowForecastHeading {
+        margin-top: 22px;
+        padding: 10px 12px;
+    }
+
+    #aqiAdvice {
+        display: block;
+    }
+
+    .section-heading {
+        display: block;
+    }
+
+    .chart-legend {
+        margin: 4px 0 8px;
+    }
+
+    .chart-container {
+        height: 245px;
+    }
+
+    #shareCardButton,
+    #whatsappButton {
+        width: 100%;
+        margin: 6px 0;
+    }
+
+    #hourlyForecast,
+    #tomorrowForecast {
+        gap: 8px;
+    }
+
+    .hour-item {
+        font-size: .84rem;
+        color: #111;
+        border-radius: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+    }
+}

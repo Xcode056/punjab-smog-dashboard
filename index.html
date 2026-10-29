@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punjab Smog & Fog</title>
+</head>
+
+<body>
+    <h1 id="pageTitle" data-en="Punjab Smog & Fog" data-ur="پنجاب اسموگ اور دھند">
+        پنجاب اسموگ اور دھند
+    </h1>
+
+    <button id="languageToggle" type="button">English</button>
+
+    <h2 id="cityName" data-en="Lahore, Punjab" data-ur="لاہور، پنجاب">
+        لاہور، پنجاب
+    </h2>
+    <label for="citySelect" id="cityLabel" data-en="Choose a city:" data-ur="شہر منتخب کریں:">
+        شہر منتخب کریں:
+    </label>
+
+    <select id="citySelect">
+        <option value="Lahore" data-en="Lahore" data-ur="لاہور">لاہور</option>
+        <option value="Faisalabad" data-en="Faisalabad" data-ur="فیصل آباد">فیصل آباد</option>
+        <option value="Rawalpindi" data-en="Rawalpindi" data-ur="راولپنڈی">راولپنڈی</option>
+        <option value="Multan" data-en="Multan" data-ur="ملتان">ملتان</option>
+        <option value="Gujranwala" data-en="Gujranwala" data-ur="گوجرانوالہ">گوجرانوالہ</option>
+        <option value="Sialkot" data-en="Sialkot" data-ur="سیالکوٹ">سیالکوٹ</option>
+        <option value="Sheikhupura" data-en="Sheikhupura" data-ur="شیخوپورہ">شیخوپورہ</option>
+        <option value="Kasur" data-en="Kasur" data-ur="قصور">قصور</option>
+        <option value="Sargodha" data-en="Sargodha" data-ur="سرگودھا">سرگودھا</option>
+        <option value="Bahawalpur" data-en="Bahawalpur" data-ur="بہاولپور">بہاولپور</option>
+    </select>
+    <p id="introText" data-en="Air quality information for Punjab, Pakistan."
+        data-ur="پنجاب، پاکستان میں ہوا کے معیار کی معلومات۔">پنجاب، پاکستان میں ہوا کے معیار کی معلومات۔</p>
+    <h2 id="currentAQIHeading" data-en="Current Air Quality" data-ur="موجودہ ہوا کا معیار">
+        موجودہ ہوا کا معیار
+    </h2>
+
+    <p>
+        <span id="aqiLabel" data-en="US AQI:" data-ur="امریکی ہوا کا معیار:">امریکی ہوا کا معیار:</span>
+
+        <span id="aqiValue">Loading...</span>
+    </p>
+    <p>
+        <span id="aqiCategoryLabel" data-en="Air Quality Level:" data-ur="ہوا کے معیار کی سطح:">ہوا کے معیار کی
+            سطح:</span>
+
+        <span id="aqiFace">⏳</span>
+        <span id="aqiCategory">Loading...</span>
+    </p>
+
+    <h2 id="healthAdviceHeading" data-en="Health Advice" data-ur="صحت کے لیے مشورہ">
+        صحت کے لیے مشورہ
+    </h2>
+    <p>
+        <span id="adviceLabel" data-en="Advice:" data-ur="مشورہ:">مشورہ:</span>
+
+        <span id="aqiAdviceIcon">⏳</span>
+        <span id="aqiAdvice">Loading advice...</span>
+    </p>
+
+
+    <h2 id="todayForecastHeading" data-en="Today's Air Quality Forecast" data-ur="آج ہوا کے معیار کی پیش گوئی">
+        آج ہوا کے معیار کی پیش گوئی
+    </h2>
+
+    <p>
+        <span id="lowestPM25Label" data-en="Lowest PM2.5 today:" data-ur="آج PM2.5 کی کم ترین مقدار:">آج PM2.5 کی کم
+            ترین مقدار:</span>
+
+        <span id="lowestPM25">Calculating...</span>
+    </p>
+
+    <p>
+        <span id="bestWindowLabel" data-en="Best 3-hour window:" data-ur="بہترین 3 گھنٹے کا وقت:">بہترین 3 گھنٹے کا
+            وقت:</span>
+
+        <span id="bestWindow">Calculating...</span>
+    </p>
+
+    <p id="todayForecastExplanation" data-en="The highlighted hours have the lowest predicted average PM2.5 today."
+        data-ur="نمایاں کیے گئے اوقات میں آج PM2.5 کی اوسط پیش گوئی سب سے کم ہے۔">
+        نمایاں کیے گئے اوقات میں آج PM2.5 کی اوسط پیش گوئی سب سے کم ہے۔
+    </p>
+
+    <!-- graph -->
+    <section class="panel analytics-panel" aria-labelledby="analyticsHeading">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">AIR QUALITY TRENDS</p>
+                <h2 id="analyticsHeading" data-en="Hourly AQI Analytics" data-ur="گھنٹہ وار اے کیو آئی تجزیہ">
+                    گھنٹہ وار اے کیو آئی تجزیہ
+                </h2>
+                <p class="muted" data-en="Explore how the air quality index changes throughout the forecast."
+                    data-ur="پیش گوئی کے دوران ہوا کے معیار میں تبدیلی دیکھیں۔">
+                    پیش گوئی کے دوران ہوا کے معیار میں تبدیلی دیکھیں۔
+                </p>
+            </div>
+            <span class="chart-legend">
+                <span class="legend-dot"></span>
+                AQI
+            </span>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="aqiChart" role="img" aria-label="Hourly air quality index chart">
+            </canvas>
+        </div>
+
+        <p class="chart-note" data-en="Lower AQI generally indicates better air quality."
+            data-ur="کم اے کیو آئی عام طور پر بہتر ہوا کی نشاندہی کرتا ہے۔">
+            کم اے کیو آئی عام طور پر بہتر ہوا کی نشاندہی کرتا ہے۔
+        </p>
+    </section>
+
+
+    <div id="hourlyForecast">
+        <p>Hourly forecast will appear here.</p>
+    </div>
+
+    <h2 id="tomorrowForecastHeading" data-en="Tomorrow's Air Quality Forecast" data-ur="کل ہوا کے معیار کی پیش گوئی">
+        کل ہوا کے معیار کی پیش گوئی
+    </h2>
+
+    <p>
+        <span id="lowestPM25TomorrowLabel" data-en="Lowest PM2.5 tomorrow:" data-ur="کل PM2.5 کی کم ترین مقدار:">کل
+            PM2.5 کی کم ترین مقدار:</span>
+
+        <span id="lowestPM25Tomorrow">Calculating...</span>
+    </p>
+    <p>
+        <span id="bestWindowTomorrowLabel" data-en="Best 3-hour window tomorrow:" data-ur="کل بہترین 3 گھنٹے کا وقت:">کل
+            بہترین 3 گھنٹے کا وقت:</span>
+
+        <span id="bestWindowTomorrow">Calculating...</span>
+    </p>
+
+    <div id="tomorrowForecast">
+        <p>Tomorrow's hourly forecast will appear here.</p>
+    </div>
+
+
+    <p>
+        <span id="pmLabel" data-en="PM2.5:" data-ur="PM2.5 کی مقدار:">PM2.5 کی مقدار:</span>
+
+        <span id="pmValue">Loading...</span>
+        <span>μg/m³</span>
+    </p>
+    <p>
+        <span id="updatedTimeLabel" data-en="Updated at:" data-ur="آخری بار اپ ڈیٹ:">آخری بار اپ ڈیٹ:</span>
+
+        <span id="updatedTime">Loading...</span>
+    </p>
+
+
+
+    <button id="shareCardButton" type="button" data-en="Download Smoke Card" data-ur="ڈاؤن لوڈ سموگ کارڈ">ڈاؤن لوڈ سموگ
+        کارڈ</button>
+
+    <button id="whatsappButton" type="button" data-en="share on WhatsApp" data-ur="واٹس ایپ پر شیئر کریں">
+        واٹس ایپ کھولیں
+    </button>
+
+
+
+    <footer id="siteFooter">
+        <p data-en="Data source: Open-Meteo Air Quality API." data-ur="ڈیٹا کا ذریعہ: Open-Meteo ایئر کوالٹی API۔">
+            ڈیٹا کا ذریعہ: Open-Meteo ایئر کوالٹی API۔
+        </p>
+
+        <p data-en="These values are modelled forecasts, not official readings from monitoring stations."
+            data-ur="یہ اعداد و شمار ماڈل کی پیش گوئیاں ہیں، مانیٹرنگ اسٹیشنوں کی سرکاری ریڈنگز نہیں۔">
+            یہ اعداد و شمار ماڈل کی پیش گوئیاں ہیں، مانیٹرنگ اسٹیشنوں کی سرکاری ریڈنگز نہیں۔
+        </p>
+
+        <p data-en="This dashboard provides general information and is not medical advice."
+            data-ur="یہ ڈیش بورڈ عمومی معلومات فراہم کرتا ہے، طبی مشورہ نہیں۔">
+            یہ ڈیش بورڈ عمومی معلومات فراہم کرتا ہے، طبی مشورہ نہیں۔
+        </p>
+
+        <p>
+            <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer" data-en="Visit Open-Meteo"
+                data-ur="Open-Meteo کی ویب سائٹ دیکھیں">
+                Open-Meteo کی ویب سائٹ دیکھیں
+            </a>
+        </p>
+    </footer>
+
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>
