@@ -840,26 +840,133 @@ shareCardButton.addEventListener("click", async function () {
 
 
 // Button 2: Open WhatsApp with the report text
-whatsappButton.addEventListener("click", function () {
-    const city = document.getElementById("cityName").textContent.trim();
-    const aqi = document.getElementById("aqiValue").textContent.trim();
-    const category = document.getElementById("aqiCategory").textContent.trim();
-    const pm25 = document.getElementById("pmValue").textContent.trim();
-    const updatedTime = document.getElementById("updatedTime").textContent.trim();
 
-    const message =
-        "Punjab Smog & Fog Dashboard\n\n" +
-        `City: ${city}\n` +
-        `US AQI: ${aqi} (${category})\n` +
-        `PM2.5: ${pm25}\n` +
-        `${updatedTime}\n\n` +
-        "Check air quality before going outside.";
+whatsappButton.addEventListener("click", async function () {
+    whatsappButton.disabled = true;
 
-    const whatsappURL =
-        "https://wa.me/?text=" + encodeURIComponent(message);
+    const originalText = whatsappButton.textContent;
+    whatsappButton.textContent = "Preparing share...";
 
-    window.open(whatsappURL, "_blank");
+    // Open a temporary tab immediately to avoid popup blocking
+    // when the fallback is needed after asynchronous work.
+    const fallbackTab = window.open("about:blank", "_blank");
+
+    try {
+        // 1. Generate the current smog card.
+        const canvas = generateSmogCard();
+
+        // 2. Convert the canvas into a PNG.
+        const blob = await new Promise((resolve, reject) => {
+            canvas.toBlob((result) => {
+                if (result) {
+                    resolve(result);
+                } else {
+                    reject(new Error("Could not create PNG image."));
+                }
+            }, "image/png");
+        });
+
+        // 3. Create the image file.
+        const file = new File(
+            [blob],
+            "punjab-smog.png",
+            { type: "image/png" }
+        );
+
+        // 4. Prepare the report message.
+        const city = document.getElementById("cityName").textContent.trim();
+        const aqi = document.getElementById("aqiValue").textContent.trim();
+        const category = document.getElementById("aqiCategory").textContent.trim();
+        const pm25 = document.getElementById("pmValue").textContent.trim();
+        const updatedTime = document.getElementById("updatedTime").textContent.trim();
+
+        const websiteURL =
+            "https://xcode056.github.io/punjab-smog-dashboard/";
+
+        const message =
+            "پنجاب اسموگ اور دھند\n" +
+            "آج اپنی ہوا کے معیار کو چیک کریں۔\n\n" +
+            "شہر: " + city + "\n" +
+            "AQI: " + aqi + " (" + category + ")\n" +
+            "PM2.5: " + pm25 + "\n" +
+            updatedTime + "\n\n" +
+            "Check your city's air quality before going outside.\n" +
+            "اپنے شہر کی ہوا کا معیار یہاں دیکھیں:\n" +
+            websiteURL;
+
+        // 5. Check whether this browser supports image sharing.
+        const canShareImage =
+            typeof navigator.canShare === "function" &&
+            typeof navigator.share === "function" &&
+            navigator.canShare({ files: [file] });
+
+        if (canShareImage) {
+            // Close the temporary fallback tab.
+            if (fallbackTab) {
+                fallbackTab.close();
+            }
+
+            try {
+                // Share the image and message through the native share sheet.
+                await navigator.share({
+                    files: [file],
+                    title: "Punjab Smog & Fog",
+                    text: message
+                });
+
+                return;
+            } catch (error) {
+                if (error.name === "AbortError") {
+                    // User cancelled the share sheet.
+                    return;
+                }
+
+                console.warn("Native sharing failed:", error);
+                // Continue to the download + WhatsApp fallback.
+            }
+        }
+
+        // 6. Fallback: download the image.
+        const imageURL = URL.createObjectURL(blob);
+        const downloadLink = document.createElement("a");
+
+        downloadLink.href = imageURL;
+        downloadLink.download = "punjab-smog.png";
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        downloadLink.remove();
+
+        setTimeout(() => {
+            URL.revokeObjectURL(imageURL);
+        }, 60000);
+
+        // 7. Open WhatsApp with the report and website link.
+        const whatsappURL =
+            "https://wa.me/?text=" + encodeURIComponent(message);
+
+        if (fallbackTab) {
+            fallbackTab.location.href = whatsappURL;
+        } else {
+            // If pop-ups are blocked, use the current tab.
+            window.location.href = whatsappURL;
+        }
+
+    } catch (error) {
+        console.error("Smog card sharing failed:", error);
+
+        if (fallbackTab) {
+            fallbackTab.close();
+        }
+
+        alert("We couldn't prepare your smog card. Please try again.");
+
+    } finally {
+        whatsappButton.disabled = false;
+        whatsappButton.textContent = originalText;
+    }
 });
+
 
 
 
