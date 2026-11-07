@@ -1050,11 +1050,16 @@ shareCardButton.addEventListener("click", async function () {
 
 // Button 2: Open WhatsApp with the report text
 
+
+
 whatsappButton.addEventListener("click", async function () {
     whatsappButton.disabled = true;
 
     const originalText = whatsappButton.textContent;
     whatsappButton.textContent = "Preparing share...";
+
+    // Open a temporary tab immediately to prevent popup blocking.
+    const whatsappTab = window.open("about:blank", "_blank");
 
     try {
         // 1. Generate the smog card.
@@ -1099,21 +1104,46 @@ whatsappButton.addEventListener("click", async function () {
             "اپنے شہر کی ہوا کا معیار یہاں دیکھیں:\n" +
             websiteURL;
 
-        // 5. Check whether image sharing is supported.
-        if (
-            navigator.canShare &&
-            navigator.share &&
-            navigator.canShare({ files: [file] })
-        ) {
-            await navigator.share({
-                files: [file],
-                text: message
-            });
+        // 5. Check whether native image sharing is supported.
+        let canShareImage = false;
 
-            return;
+        try {
+            canShareImage =
+                navigator.canShare &&
+                navigator.share &&
+                navigator.canShare({ files: [file] });
+        } catch (error) {
+            console.warn("Native sharing is unavailable:", error);
         }
 
-        // 6. Fallback: download the image.
+        // 6. Try native image sharing.
+        if (canShareImage) {
+            try {
+                await navigator.share({
+                    files: [file],
+                    text: message
+                });
+
+                // Native sharing succeeded.
+                if (whatsappTab && !whatsappTab.closed) {
+                    whatsappTab.close();
+                }
+
+                return;
+
+            } catch (shareError) {
+                if (shareError.name === "AbortError") {
+                    throw shareError;
+                }
+
+                console.warn(
+                    "Native sharing failed. Using fallback:",
+                    shareError
+                );
+            }
+        }
+
+        // 7. Fallback: download the image.
         const imageURL = URL.createObjectURL(blob);
         const downloadLink = document.createElement("a");
 
@@ -1128,13 +1158,21 @@ whatsappButton.addEventListener("click", async function () {
             URL.revokeObjectURL(imageURL);
         }, 60000);
 
-        // 7. Open WhatsApp with the report text and website URL.
+        // 8. Open WhatsApp with the report text.
         const whatsappURL =
             "https://wa.me/?text=" + encodeURIComponent(message);
 
-        window.open(whatsappURL, "_blank");
+        if (whatsappTab && !whatsappTab.closed) {
+            whatsappTab.location.href = whatsappURL;
+        } else {
+            window.location.href = whatsappURL;
+        }
 
     } catch (error) {
+        if (whatsappTab && !whatsappTab.closed) {
+            whatsappTab.close();
+        }
+
         if (error.name === "AbortError") {
             console.log("User cancelled sharing.");
         } else {
@@ -1148,6 +1186,8 @@ whatsappButton.addEventListener("click", async function () {
         whatsappButton.textContent = originalText;
     }
 });
+
+
 
 
 
