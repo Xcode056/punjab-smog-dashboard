@@ -688,6 +688,7 @@ async function loadCityData() {
 
 ////whatsapp shareable card
 
+
 function generateSmogCard() {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -695,100 +696,308 @@ function generateSmogCard() {
     canvas.width = 1080;
     canvas.height = 1080;
 
-    // Background
-    ctx.fillStyle = "#f4f7fb";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Header
-    ctx.fillStyle = "#123047";
-    ctx.fillRect(0, 0, canvas.width, 220);
-
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 54px Arial";
-    ctx.fillText("Punjab Smog Dashboard", 60, 100);
-
-    ctx.font = "32px Arial";
-    ctx.fillText("Air Quality Report", 60, 160);
-
-    // City name
-    ctx.fillStyle = "#123047";
-    ctx.font = "bold 44px Arial";
-    ctx.fillText(
-        document.getElementById("cityName").textContent,
-        60,
-        300
-    );
-
-    // AQI label
-    ctx.font = "32px Arial";
-    ctx.fillText("Current US AQI", 60, 390);
-
-    // AQI value
-
+    // Get current AQI
     const aqiText = document.getElementById("aqiValue").textContent.trim();
     const aqi = Number(aqiText);
 
-    if (aqiText === "" || !Number.isFinite(aqi) || aqi < 0) {
-        ctx.fillStyle = "#123047";
+    // Background colour according to AQI
+    let cardBackground;
+    if (!Number.isFinite(aqi) || aqi < 0) {
+        cardBackground = "#f4f7fb";
     } else if (aqi <= 50) {
-        ctx.fillStyle = "#00a651";
+        cardBackground = "#d9f2df";
     } else if (aqi <= 100) {
-        ctx.fillStyle = "#f5c400";
+        cardBackground = "#fff2bd";
     } else if (aqi <= 150) {
-        ctx.fillStyle = "#f07824";
+        cardBackground = "#ffe0c2";
     } else if (aqi <= 200) {
-        ctx.fillStyle = "#e53935";
+        cardBackground = "#ffd6d6";
     } else if (aqi <= 300) {
-        ctx.fillStyle = "#8e44ad";
+        cardBackground = "#ead7f5";
     } else {
-        ctx.fillStyle = "#7e0023";
+        cardBackground = "#f2c5cf";
     }
-    ctx.font = "bold 150px Arial";
-    ctx.fillText(
-        document.getElementById("aqiValue").textContent,
-        60,
-        560
-    );
 
+    ctx.fillStyle = cardBackground;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // AQI category
+    // Header Background
     ctx.fillStyle = "#123047";
-    ctx.font = "bold 38px Arial";
-    ctx.fillText(
-        document.getElementById("aqiCategory").textContent,
-        60,
-        640,
-        950
-    );
+    ctx.fillRect(0, 0, canvas.width, 220);
 
-    // PM2.5
-    ctx.font = "34px Arial";
-    ctx.fillText(
-        "PM2.5: " +
-        document.getElementById("pmValue").textContent +
-        " µg/m³",
-        60,
-        740
-    );
+    // ==========================================
+    // URDU LAYOUT
+    // ==========================================
+    if (currentLanguage === "ur") {
+        ctx.direction = "rtl";
+        ctx.textAlign = "right";
 
-    // Update time
-    ctx.font = "26px Arial";
-    ctx.fillText(
-        "Updated: " +
-        document.getElementById("updatedTime").textContent,
-        60,
-        820,
-        950
-    );
+        // Card heading
+        ctx.fillStyle = "#ffffff";
+        ctx.font = 'bold 52px "Noto Nastaliq Urdu"';
+        ctx.fillText("پنجاب اسموگ اور دھند", 1020, 95);
 
-    // Footer
-    ctx.fillStyle = "#456477";
-    ctx.font = "26px Arial";
-    ctx.fillText(
-        "Check air quality before going outside.",
-        60,
-        950
-    );
+        ctx.font = '30px "Noto Nastaliq Urdu"';
+        ctx.fillText("ہوا کے معیار کی رپورٹ", 1020, 160);
+
+        // City Name (Top Right)
+        const cityName = document.getElementById("cityName").textContent.trim();
+        ctx.fillStyle = "#123047";
+        ctx.font = 'bold 44px "Noto Nastaliq Urdu"';
+        ctx.fillText(cityName, 1020, 275);
+
+        // AQI Category / Status
+        const category = document.getElementById("aqiCategory").textContent.trim();
+        ctx.font = 'bold 36px "Noto Nastaliq Urdu"';
+        ctx.fillText(category, 1020, 350, 950);
+
+        // PM2.5 Section
+        const pmValue = document.getElementById("pmValue").textContent.trim();
+        ctx.font = 'bold 28px "Noto Nastaliq Urdu"';
+        ctx.fillText("فضا میں باریک ذرات : PM2.5", 1020, 425);
+        ctx.direction = "ltr";
+        ctx.textAlign = "right";
+        ctx.font = "28px Arial";
+        ctx.fillText(pmValue + " µg/m³", 660, 425);
+
+        // Today's Best Air-Quality Window
+        const bestWindowElement = document.getElementById("bestWindow");
+        const bestWindowText = bestWindowElement
+            ? bestWindowElement.textContent.trim().split(" (")[0]
+            : "Not available";
+
+        ctx.direction = "rtl";
+        ctx.textAlign = "right";
+        ctx.font = 'bold 28px "Noto Nastaliq Urdu"';
+        ctx.fillText("آج کا بہترین وقت", 1020, 490);
+        ctx.direction = "ltr";
+        ctx.textAlign = "right";
+        ctx.font = "26px Arial";
+        ctx.fillText(bestWindowText, 760, 490);
+
+        // Big AQI Number Value Color
+        if (!Number.isFinite(aqi) || aqi < 0) {
+            ctx.fillStyle = "#123047";
+        } else if (aqi <= 50) {
+            ctx.fillStyle = "#00a651";
+        } else if (aqi <= 100) {
+            ctx.fillStyle = "#b18b00";
+        } else if (aqi <= 150) {
+            ctx.fillStyle = "#f07824";
+        } else if (aqi <= 200) {
+            ctx.fillStyle = "#e53935";
+        } else if (aqi <= 300) {
+            ctx.fillStyle = "#8e44ad";
+        } else {
+            ctx.fillStyle = "#7e0023";
+        }
+
+        // Render Big AQI Number on Left
+        ctx.direction = "ltr";
+        ctx.textAlign = "left";
+        ctx.font = "bold 140px Arial";
+        ctx.fillText(aqiText || "--", 60, 390);
+
+        // AQI Label under number
+        ctx.fillStyle = "#456477";
+        ctx.direction = "rtl";
+        ctx.textAlign = "left";
+        ctx.font = '24px "Noto Nastaliq Urdu"';
+        ctx.fillText("موجودہ امریکی AQI", 60, 435);
+
+        // AQI Level Emoji next to AQI number
+        let aqiEmoji;
+        if (!Number.isFinite(aqi) || aqi < 0) {
+            aqiEmoji = "❔";
+        } else if (aqi <= 50) {
+            aqiEmoji = "😊";
+        } else if (aqi <= 100) {
+            aqiEmoji = "😐";
+        } else if (aqi <= 200) {
+            aqiEmoji = "😷";
+        } else {
+            aqiEmoji = "☠️";
+        }
+        ctx.font = "100px Arial";
+        ctx.fillText(aqiEmoji, 320, 385);
+
+        // Divider Line
+        ctx.strokeStyle = "#d8b4bc";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(60, 560);
+        ctx.lineTo(1020, 560);
+        ctx.stroke();
+
+        // --- HEALTH TIPS ROW (Urdu) ---
+        const tipsUr = [
+            { emoji: "😷", text: "ماسک پہنیں" },
+            { emoji: "🪟", text: "کھڑکیاں بند رکھیں" },
+            { emoji: "👶", text: "بچوں کو گھر میں رکھیں" }
+        ];
+
+        const tipPositions = [220, 540, 860];
+        tipsUr.forEach((tip, index) => {
+            const x = tipPositions[index];
+            ctx.direction = "ltr";
+            ctx.textAlign = "center";
+            ctx.font = "55px Arial";
+            ctx.fillText(tip.emoji, x, 640);
+
+            ctx.fillStyle = "#123047";
+            ctx.direction = "rtl";
+            ctx.font = 'bold 22px "Noto Nastaliq Urdu"';
+            ctx.fillText(tip.text, x, 690);
+        });
+
+        // --- FOOTER SECTION (Urdu) ---
+        ctx.strokeStyle = "#d8b4bc";
+        ctx.beginPath();
+        ctx.moveTo(60, 740);
+        ctx.lineTo(1020, 740);
+        ctx.stroke();
+
+        const updatedTimeStr = document.getElementById("updatedTime").textContent.trim();
+        ctx.direction = "rtl";
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#456477";
+        ctx.font = '22px "Noto Nastaliq Urdu"';
+        ctx.fillText("آخری اپ ڈیٹ: " + updatedTimeStr, 1020, 795);
+        ctx.fillText("باہر جانے سے پہلے ہوا کا معیار ضرور چیک کریں۔", 1020, 835);
+
+        // Website URL (Always LTR)
+        ctx.direction = "ltr";
+        ctx.textAlign = "left";
+        ctx.fillStyle = "#123047";
+        ctx.font = "bold 24px Arial";
+        ctx.fillText("https://xcode056.github.io/punjab-smog-dashboard/", 60, 900);
+
+    }
+    // ==========================================
+    // ENGLISH LAYOUT
+    // ==========================================
+    else {
+        ctx.direction = "ltr";
+        ctx.textAlign = "left";
+
+        // Card heading
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 52px Arial";
+        ctx.fillText("Punjab Smog Dashboard", 60, 95);
+
+        ctx.font = "30px Arial";
+        ctx.fillText("Air Quality Report", 60, 160);
+
+        // Big AQI Number Value Color
+        if (!Number.isFinite(aqi) || aqi < 0) {
+            ctx.fillStyle = "#123047";
+        } else if (aqi <= 50) {
+            ctx.fillStyle = "#00a651";
+        } else if (aqi <= 100) {
+            ctx.fillStyle = "#b18b00";
+        } else if (aqi <= 150) {
+            ctx.fillStyle = "#f07824";
+        } else if (aqi <= 200) {
+            ctx.fillStyle = "#e53935";
+        } else if (aqi <= 300) {
+            ctx.fillStyle = "#8e44ad";
+        } else {
+            ctx.fillStyle = "#7e0023";
+        }
+
+        // Render Big AQI Number on Left
+        ctx.font = "bold 140px Arial";
+        ctx.fillText(aqiText || "--", 60, 390);
+
+        // AQI Label under number
+        ctx.fillStyle = "#456477";
+        ctx.font = "22px Arial";
+        ctx.fillText("Current US AQI", 60, 435);
+
+        // AQI Level Emoji next to AQI number
+        let aqiEmoji;
+        if (!Number.isFinite(aqi) || aqi < 0) {
+            aqiEmoji = "❔";
+        } else if (aqi <= 50) {
+            aqiEmoji = "😊";
+        } else if (aqi <= 100) {
+            aqiEmoji = "😐";
+        } else if (aqi <= 200) {
+            aqiEmoji = "😷";
+        } else {
+            aqiEmoji = "☠️";
+        }
+        ctx.font = "100px Arial";
+        ctx.fillText(aqiEmoji, 320, 385);
+
+        // Right Side Info (City Name, Category, PM2.5, Best Time)
+        const cityName = document.getElementById("cityName").textContent.trim();
+        ctx.fillStyle = "#123047";
+        ctx.font = "bold 44px Arial";
+        ctx.fillText(cityName, 540, 275);
+
+        const category = document.getElementById("aqiCategory").textContent.trim();
+        ctx.font = "bold 32px Arial";
+        ctx.fillText(category, 540, 335, 480);
+
+        const pmValue = document.getElementById("pmValue").textContent.trim();
+        ctx.font = "26px Arial";
+        ctx.fillText("PM2.5: " + pmValue + " µg/m³", 540, 400);
+
+        const bestWindowElement = document.getElementById("bestWindow");
+        const bestWindowText = bestWindowElement
+            ? bestWindowElement.textContent.trim().split(" (")[0]
+            : "Not available";
+        ctx.fillText("Best time today: " + bestWindowText, 540, 455);
+
+        // Divider Line
+        ctx.strokeStyle = "#d8b4bc";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(60, 560);
+        ctx.lineTo(1020, 560);
+        ctx.stroke();
+
+        // --- HEALTH TIPS ROW (English) ---
+        const tipsEn = [
+            { emoji: "😷", text: "Wear a mask" },
+            { emoji: "🪟", text: "Close windows" },
+            { emoji: "👶", text: "Keep children indoors" }
+        ];
+
+        const tipPositions = [220, 540, 860];
+        tipsEn.forEach((tip, index) => {
+            const x = tipPositions[index];
+            ctx.textAlign = "center";
+            ctx.font = "55px Arial";
+            ctx.fillText(tip.emoji, x, 640);
+
+            ctx.fillStyle = "#123047";
+            ctx.font = "bold 22px Arial";
+            ctx.fillText(tip.text, x, 690);
+        });
+
+        // --- FOOTER SECTION (English) ---
+        ctx.strokeStyle = "#d8b4bc";
+        ctx.beginPath();
+        ctx.moveTo(60, 740);
+        ctx.lineTo(1020, 740);
+        ctx.stroke();
+
+        ctx.textAlign = "left";
+        ctx.fillStyle = "#456477";
+        ctx.font = "20px Arial";
+        ctx.fillText("Updated: " + document.getElementById("updatedTime").textContent.trim(), 60, 795);
+        ctx.fillText("Check air quality before going outside.", 60, 835);
+
+        ctx.fillStyle = "#123047";
+        ctx.font = "bold 24px Arial";
+        ctx.fillText("https://xcode056.github.io/punjab-smog-dashboard/", 60, 900);
+    }
+
+    // Reset canvas text settings
+    ctx.direction = "ltr";
+    ctx.textAlign = "left";
 
     return canvas;
 }
@@ -847,12 +1056,8 @@ whatsappButton.addEventListener("click", async function () {
     const originalText = whatsappButton.textContent;
     whatsappButton.textContent = "Preparing share...";
 
-    // Open a temporary tab immediately to avoid popup blocking
-    // when the fallback is needed after asynchronous work.
-    const fallbackTab = window.open("about:blank", "_blank");
-
     try {
-        // 1. Generate the current smog card.
+        // 1. Generate the smog card.
         const canvas = generateSmogCard();
 
         // 2. Convert the canvas into a PNG.
@@ -894,36 +1099,18 @@ whatsappButton.addEventListener("click", async function () {
             "اپنے شہر کی ہوا کا معیار یہاں دیکھیں:\n" +
             websiteURL;
 
-        // 5. Check whether this browser supports image sharing.
-        const canShareImage =
-            typeof navigator.canShare === "function" &&
-            typeof navigator.share === "function" &&
-            navigator.canShare({ files: [file] });
+        // 5. Check whether image sharing is supported.
+        if (
+            navigator.canShare &&
+            navigator.share &&
+            navigator.canShare({ files: [file] })
+        ) {
+            await navigator.share({
+                files: [file],
+                text: message
+            });
 
-        if (canShareImage) {
-            // Close the temporary fallback tab.
-            if (fallbackTab) {
-                fallbackTab.close();
-            }
-
-            try {
-                // Share the image and message through the native share sheet.
-                await navigator.share({
-                    files: [file],
-                    title: "Punjab Smog & Fog",
-                    text: message
-                });
-
-                return;
-            } catch (error) {
-                if (error.name === "AbortError") {
-                    // User cancelled the share sheet.
-                    return;
-                }
-
-                console.warn("Native sharing failed:", error);
-                // Continue to the download + WhatsApp fallback.
-            }
+            return;
         }
 
         // 6. Fallback: download the image.
@@ -941,25 +1128,20 @@ whatsappButton.addEventListener("click", async function () {
             URL.revokeObjectURL(imageURL);
         }, 60000);
 
-        // 7. Open WhatsApp with the report and website link.
+        // 7. Open WhatsApp with the report text and website URL.
         const whatsappURL =
             "https://wa.me/?text=" + encodeURIComponent(message);
 
-        if (fallbackTab) {
-            fallbackTab.location.href = whatsappURL;
-        } else {
-            // If pop-ups are blocked, use the current tab.
-            window.location.href = whatsappURL;
-        }
+        window.open(whatsappURL, "_blank");
 
     } catch (error) {
-        console.error("Smog card sharing failed:", error);
+        if (error.name === "AbortError") {
+            console.log("User cancelled sharing.");
+        } else {
+            console.error("Smog card sharing failed:", error);
 
-        if (fallbackTab) {
-            fallbackTab.close();
+            alert("We couldn't prepare your smog card. Please try again.");
         }
-
-        alert("We couldn't prepare your smog card. Please try again.");
 
     } finally {
         whatsappButton.disabled = false;
