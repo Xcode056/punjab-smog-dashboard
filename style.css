@@ -1,32 +1,3 @@
-@font-face {
-    font-family: 'Jameel Noori Nastaleeq';
-    src: url('./fonts/JameelNooriNastaleeq.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-
-
-
-
-
-
-
-
-
-/* Punjab Smog & Fog Dashboard — clean responsive theme
-   Save this file as style.css next to index.html.
-   Optional Urdu font file: fonts/JameelNooriNastaleeq.ttf
-*/
-
-@font-face {
-    font-family: "Jameel Noori Nastaleeq";
-    src: url("./fonts/JameelNooriNastaleeq.ttf") format("truetype");
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-}
-
 :root {
     --ink: #183344;
     --muted: #607585;
@@ -64,7 +35,7 @@ body {
 }
 
 html[dir="rtl"] body {
-    font-family: "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", Tahoma, serif;
+    font-family: "Noto Nastaliq Urdu", Tahoma, serif;
     line-height: 2;
     text-align: right;
 }
@@ -174,7 +145,7 @@ p {
 html[dir="rtl"] #citySelect {
     direction: rtl;
     text-align: right;
-    font-family: "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", Tahoma, serif;
+    font-family: "Noto Nastaliq Urdu", Tahoma, serif;
     line-height: 1.8;
 }
 
