@@ -633,3 +633,65 @@ button:focus-visible,
         transition-duration: .01ms !important;
     }
 }
+
+
+
+/* Blocker 7: Horizontal hourly AQI colour strip */
+
+#hourlyForecast,
+#tomorrowForecast {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 12px 5px 18px;
+    width: 100%;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+}
+
+.hour-item {
+    flex: 0 0 76px;
+    min-width: 76px;
+    min-height: 92px;
+    padding: 10px 5px !important;
+    border: 1px solid rgba(24, 51, 68, .2) !important;
+    border-radius: 10px !important;
+    color: #111 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    text-align: center;
+    line-height: 1.2;
+    scroll-snap-align: start;
+}
+
+.hour-time {
+    font-size: .75rem;
+    white-space: nowrap;
+}
+
+.hour-aqi {
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.hour-pm {
+    font-size: .72rem;
+    white-space: nowrap;
+}
+
+html[dir="rtl"] .hour-item {
+    direction: ltr;
+}
+
+/* Highlight the best three-hour window */
+.hour-item[style*="border: 3px solid"] {
+    border: 3px solid #075c68 !important;
+    outline: 2px solid #75c7c9;
+    outline-offset: 1px;
+    box-shadow: 0 0 0 3px #e4f4f5;
+}

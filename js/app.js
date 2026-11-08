@@ -248,6 +248,7 @@ function findBestWindow(values, windowLength) {
     return { bestAverage, bestStart };
 }
 
+
 function renderHourlyForecast(containerId, times, pmValues, aqiValues, highlightStart, highlightLength) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -264,12 +265,10 @@ function renderHourlyForecast(containerId, times, pmValues, aqiValues, highlight
     times.forEach((time, index) => {
         const pm25 = pmValues[index];
         const aqi = aqiValues[index];
+
         const item = document.createElement("div");
         item.className = "hour-item";
         item.style.backgroundColor = getAQIColor(aqi);
-        item.style.color = "black";
-        item.style.padding = "10px";
-        item.style.borderRadius = "6px";
 
         if (
             highlightStart >= 0 &&
@@ -283,11 +282,16 @@ function renderHourlyForecast(containerId, times, pmValues, aqiValues, highlight
         const aqiLabel = Number.isFinite(aqi) ? aqi : "—";
         const pmLabel = Number.isFinite(pm25) ? pm25.toFixed(1) : "—";
 
-        // The LTR span keeps times and numbers readable inside Urdu RTL text.
-        item.innerHTML = `<span dir="ltr" style="unicode-bidi: isolate;">${timeLabel} — AQI: ${aqiLabel} — PM2.5: ${pmLabel} μg/m³</span>`;
+        item.innerHTML = `
+            <span class="hour-time" dir="ltr">${timeLabel}</span>
+            <strong class="hour-aqi" dir="ltr">${aqiLabel}</strong>
+            <span class="hour-pm" dir="ltr">${pmLabel}</span>
+        `;
+
         container.appendChild(item);
     });
 }
+
 
 function renderBestWindow({
     labelId,
