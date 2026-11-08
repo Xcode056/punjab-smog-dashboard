@@ -1,4 +1,5 @@
 let currentLanguage = "ur";
+let latestUpdateTimestamp = null;
 
 const languageToggle = document.getElementById("languageToggle");
 const citySelect = document.getElementById("citySelect");
@@ -80,6 +81,24 @@ function getAQIColor(aqi) {
     if (aqi <= 200) return "#ff0000";
     if (aqi <= 300) return "#8f3f97";
     return "#7e0023";
+}
+
+function updateAQICategoryStyle(aqi) {
+    const category = document.getElementById("aqiCategory");
+    if (!category) return;
+
+    let colors;
+    if (!Number.isFinite(aqi)) colors = ["#f1f5f9", "#cbd5e1", "#334155"];
+    else if (aqi <= 50) colors = ["#e8f5e9", "#81c784", "#1b5e20"];
+    else if (aqi <= 100) colors = ["#fffde7", "#f9a825", "#6d4c00"];
+    else if (aqi <= 150) colors = ["#fff3e0", "#ef6c00", "#9a3412"];
+    else if (aqi <= 200) colors = ["#ffebee", "#e53935", "#b71c1c"];
+    else if (aqi <= 300) colors = ["#f3e5f5", "#8e24aa", "#6a1b9a"];
+    else colors = ["#ffebee", "#7e0023", "#7e0023"];
+
+    category.style.backgroundColor = colors[0];
+    category.style.borderColor = colors[1];
+    category.style.color = colors[2];
 }
 
 function formatPakistanTime(timestamp) {
@@ -191,6 +210,7 @@ function setUnavailableState() {
     setText("pmValue", unavailable);
     setText("updatedTime", unavailable);
     setText("aqiCategory", currentLanguage === "ur" ? "ڈیٹا دستیاب نہیں" : "Data unavailable");
+    updateAQICategoryStyle(NaN);
     setText("aqiAdvice", currentLanguage === "ur"
         ? "ہوا کے معیار کا ڈیٹا لوڈ نہیں ہو سکا۔ براہِ کرم دوبارہ کوشش کریں۔"
         : "Unable to load air quality data. Please try again.");
@@ -571,20 +591,24 @@ async function loadCityData() {
         setText("aqiValue", currentAQI);
         setText("pmValue", currentPM25.toFixed(1));
 
-        const updatedDate = new Date(`${data.current.time}:00+05:00`);
+        latestUpdateTimestamp = data.current.time;
+        const updatedDate = new Date(`${latestUpdateTimestamp}:00+05:00`);
         setText("updatedTime", Number.isNaN(updatedDate.getTime())
             ? "—"
-            : updatedDate.toLocaleString("en-PK", {
+            : `${updatedDate.toLocaleDateString("en-GB", {
                 day: "2-digit",
                 month: "short",
                 year: "numeric",
+                timeZone: "Asia/Karachi"
+            })} | ${updatedDate.toLocaleTimeString("en-PK", {
                 hour: "numeric",
                 minute: "2-digit",
                 hour12: true,
                 timeZone: "Asia/Karachi"
-            }));
+            })}`);
 
         setText("aqiCategory", aqiInfo.category);
+        updateAQICategoryStyle(currentAQI);
         setText("aqiFace", aqiInfo.face);
         setText("aqiAdvice", aqiInfo.advice);
         setText("aqiAdviceIcon", aqiInfo.icon);
@@ -692,6 +716,21 @@ async function loadCityData() {
 
 ////whatsapp shareable card
 
+function formatCardDateTime() {
+    if (!latestUpdateTimestamp) return "—";
+    const date = new Date(`${latestUpdateTimestamp}:00+05:00`);
+    if (Number.isNaN(date.getTime())) return "—";
+
+    const datePart = date.toLocaleDateString("en-GB", {
+        day: "2-digit", month: "short", year: "numeric",
+        timeZone: "Asia/Karachi"
+    });
+    const timePart = date.toLocaleTimeString("en-PK", {
+        hour: "numeric", minute: "2-digit", hour12: true,
+        timeZone: "Asia/Karachi"
+    });
+    return `${datePart} | ${timePart}`;
+}
 
 function generateSmogCard() {
     const canvas = document.createElement("canvas");
@@ -729,9 +768,9 @@ function generateSmogCard() {
     ctx.fillStyle = "#123047";
     ctx.fillRect(0, 0, canvas.width, 220);
 
-    // ==========================================
+
     // URDU LAYOUT
-    // ==========================================
+
     if (currentLanguage === "ur") {
         ctx.direction = "rtl";
         ctx.textAlign = "right";
@@ -861,12 +900,20 @@ function generateSmogCard() {
         ctx.lineTo(1020, 740);
         ctx.stroke();
 
-        const updatedTimeStr = document.getElementById("updatedTime").textContent.trim();
         ctx.direction = "rtl";
         ctx.textAlign = "right";
         ctx.fillStyle = "#456477";
         ctx.font = '22px "Noto Nastaliq Urdu"';
-        ctx.fillText("آخری اپ ڈیٹ: " + updatedTimeStr, 1020, 795);
+        ctx.fillText("آخری اپ ڈیٹ:", 1020, 795);
+
+        ctx.direction = "ltr";
+        ctx.textAlign = "right";
+        ctx.font = "22px Arial";
+        ctx.fillText(formatCardDateTime(), 780, 795);
+
+        ctx.direction = "rtl";
+        ctx.textAlign = "right";
+        ctx.font = '22px "Noto Nastaliq Urdu"';
         ctx.fillText("باہر جانے سے پہلے ہوا کا معیار ضرور چیک کریں۔", 1020, 835);
 
         // Website URL (Always LTR)
@@ -874,12 +921,12 @@ function generateSmogCard() {
         ctx.textAlign = "left";
         ctx.fillStyle = "#123047";
         ctx.font = "bold 24px Arial";
-        ctx.fillText("https://xcode056.github.io/punjab-smog-dashboard/", 60, 900);
+        ctx.fillText("https://dhund.pk", 60, 900);
 
     }
-    // ==========================================
+
     // ENGLISH LAYOUT
-    // ==========================================
+
     else {
         ctx.direction = "ltr";
         ctx.textAlign = "left";
@@ -991,12 +1038,12 @@ function generateSmogCard() {
         ctx.textAlign = "left";
         ctx.fillStyle = "#456477";
         ctx.font = "20px Arial";
-        ctx.fillText("Updated: " + document.getElementById("updatedTime").textContent.trim(), 60, 795);
+        ctx.fillText("Updated: " + formatCardDateTime(), 60, 795);
         ctx.fillText("Check air quality before going outside.", 60, 835);
 
         ctx.fillStyle = "#123047";
         ctx.font = "bold 24px Arial";
-        ctx.fillText("https://xcode056.github.io/punjab-smog-dashboard/", 60, 900);
+        ctx.fillText("https://dhund.pk", 60, 900);
     }
 
     // Reset canvas text settings
@@ -1058,44 +1105,24 @@ shareCardButton.addEventListener("click", async function () {
 
 whatsappButton.addEventListener("click", async function () {
     whatsappButton.disabled = true;
-
     const originalText = whatsappButton.textContent;
     whatsappButton.textContent = "Preparing share...";
 
-    // Open a temporary tab immediately to prevent popup blocking.
-    const whatsappTab = window.open("about:blank", "_blank");
-
     try {
-        // 1. Generate the smog card.
         const canvas = generateSmogCard();
-
-        // 2. Convert the canvas into a PNG.
         const blob = await new Promise((resolve, reject) => {
-            canvas.toBlob((result) => {
-                if (result) {
-                    resolve(result);
-                } else {
-                    reject(new Error("Could not create PNG image."));
-                }
-            }, "image/png");
+            canvas.toBlob(result => result ? resolve(result) : reject(
+                new Error("Could not create PNG image.")
+            ), "image/png");
         });
+        const file = new File([blob], "punjab-smog.png", { type: "image/png" });
 
-        // 3. Create the image file.
-        const file = new File(
-            [blob],
-            "punjab-smog.png",
-            { type: "image/png" }
-        );
-
-        // 4. Prepare the report message.
         const city = document.getElementById("cityName").textContent.trim();
         const aqi = document.getElementById("aqiValue").textContent.trim();
         const category = document.getElementById("aqiCategory").textContent.trim();
         const pm25 = document.getElementById("pmValue").textContent.trim();
         const updatedTime = document.getElementById("updatedTime").textContent.trim();
-
-        const websiteURL =
-            "https://xcode056.github.io/punjab-smog-dashboard/";
+        const websiteURL = "https://dhund.pk";
 
         const message =
             "پنجاب اسموگ اور دھند\n" +
@@ -1108,96 +1135,45 @@ whatsappButton.addEventListener("click", async function () {
             "اپنے شہر کی ہوا کا معیار یہاں دیکھیں:\n" +
             websiteURL;
 
-        // 5. Check whether native image sharing is supported.
-        let canShareImage = false;
-
+        let imageShareSupported = false;
         try {
-            canShareImage =
-                navigator.canShare &&
-                navigator.share &&
+            imageShareSupported =
+                typeof navigator.canShare === "function" &&
+                typeof navigator.share === "function" &&
                 navigator.canShare({ files: [file] });
-        } catch (error) {
-            console.warn("Native sharing is unavailable:", error);
+        } catch (supportError) {
+            console.warn("File sharing is not supported:", supportError);
         }
 
-        // 6. Try native image sharing.
-        if (canShareImage) {
+        if (imageShareSupported) {
             try {
                 await navigator.share({
                     files: [file],
+                    title: "Punjab Smog & Fog",
                     text: message
                 });
-
-                // Native sharing succeeded.
-                if (whatsappTab && !whatsappTab.closed) {
-                    whatsappTab.close();
-                }
-
                 return;
-
             } catch (shareError) {
                 if (shareError.name === "AbortError") {
-                    throw shareError;
+                    console.log("User cancelled sharing.");
+                    return;
                 }
-
-                console.warn(
-                    "Native sharing failed. Using fallback:",
-                    shareError
-                );
+                console.warn("Image sharing failed; using text fallback:", shareError);
             }
         }
 
-        // 7. Fallback: download the image.
-        const imageURL = URL.createObjectURL(blob);
-        const downloadLink = document.createElement("a");
-
-        downloadLink.href = imageURL;
-        downloadLink.download = "punjab-smog.png";
-
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        downloadLink.remove();
-
-        setTimeout(() => {
-            URL.revokeObjectURL(imageURL);
-        }, 60000);
-
-        // 8. Open WhatsApp with the report text.
-        const whatsappURL =
-            "https://wa.me/?text=" + encodeURIComponent(message);
-
-        if (whatsappTab && !whatsappTab.closed) {
-            whatsappTab.location.href = whatsappURL;
-        } else {
-            window.location.href = whatsappURL;
-        }
+        // No blank popup: unsupported browsers go straight to WhatsApp text + link.
+        const whatsappURL = "https://wa.me/?text=" + encodeURIComponent(message);
+        window.location.assign(whatsappURL);
 
     } catch (error) {
-        if (whatsappTab && !whatsappTab.closed) {
-            whatsappTab.close();
-        }
-
-        if (error.name === "AbortError") {
-            console.log("User cancelled sharing.");
-        } else {
-            console.error("Smog card sharing failed:", error);
-
-            alert("We couldn't prepare your smog card. Please try again.");
-        }
-
+        console.error("Smog card sharing failed:", error);
+        alert("We couldn't prepare your smog card. Please try again.");
     } finally {
         whatsappButton.disabled = false;
         whatsappButton.textContent = originalText;
     }
 });
-
-
-
-
-
-
-
-
 
 
 // Initial page setup and first data request.

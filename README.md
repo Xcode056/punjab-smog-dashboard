@@ -38,7 +38,7 @@ Forecasts are estimates and may differ from actual conditions. This dashboard is
 
 ## Deployment
 
-This project can be deployed using GitHub Pages.
+This project is hosted with GitHub Pages and uses the custom domain [https://dhund.pk](https://dhund.pk).
 
 ## Future Improvements
 

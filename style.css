@@ -62,8 +62,9 @@ h1 {
 }
 
 html[dir="rtl"] h1 {
-    line-height: 1.9;
+    line-height: 1.65;
     letter-spacing: 0;
+    margin-bottom: 10px;
 }
 
 h2 {
@@ -76,7 +77,10 @@ h2 {
 }
 
 html[dir="rtl"] h2 {
-    line-height: 1.9;
+    line-height: 1.65;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
 }
 
 p {
@@ -120,9 +124,10 @@ p {
 
 #cityLabel {
     display: block;
-    margin: 8px 0 6px;
+    margin: 5px 0 6px;
     color: var(--muted);
     font-weight: 750;
+    line-height: 1.8;
 }
 
 #citySelect {
@@ -146,7 +151,9 @@ html[dir="rtl"] #citySelect {
     direction: rtl;
     text-align: right;
     font-family: "Noto Nastaliq Urdu", Tahoma, serif;
-    line-height: 1.8;
+    line-height: 1.5;
+    min-height: 58px;
+    padding: 8px 13px;
 }
 
 /* Do not force direction/positioning on native dropdown options; browsers manage popup UI. */
@@ -217,10 +224,10 @@ html[dir="rtl"] #citySelect {
     max-width: 100%;
     margin: 5px 0 10px;
     padding: 5px 13px;
-    border: 1px solid #a9d8c0;
+    border: 1px solid #cbd5e1;
     border-radius: 999px;
-    background: #eaf7ef;
-    color: #1f6945;
+    background: #f1f5f9;
+    color: #334155;
     font-weight: 800;
     overflow-wrap: anywhere;
 }
@@ -268,6 +275,9 @@ html[dir="rtl"] #aqiAdvice {
     color: #214b60;
     font-weight: 750;
     overflow-wrap: anywhere;
+    direction: ltr;
+    unicode-bidi: isolate;
+    text-align: left;
 }
 
 #todayForecastExplanation {
