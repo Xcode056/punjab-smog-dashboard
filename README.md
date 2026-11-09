@@ -38,7 +38,15 @@ Forecasts are estimates and may differ from actual conditions. This dashboard is
 
 ## Deployment
 
-This project is hosted with GitHub Pages and uses the custom domain [https://dhund.pk](https://dhund.pk).
+GitHub Pages is used to test the project:
+
+https://xcode056.github.io/punjab-smog-dashboard/
+
+The production website will be available at:
+
+https://dhund.pk
+
+The production website will be hosted on the team's VPS. Code changes will be pushed to GitHub, tested on GitHub Pages, and then deployed to the VPS.
 
 ## Future Improvements
 
